@@ -2,6 +2,16 @@ import Foundation
 import Combine
 
 struct ApiClient {
+    func register(name: String, email: String, password: String) async -> Result<EmptyCodable, NetworkError> {
+        await Network
+            .shared
+            .serve(
+                to: .register(
+                    .init(fullName: name, email: email, password: password)
+                )
+            )
+    }
+    
     func requestAuthCode(email: String) async -> Result<AuthCodeSession, NetworkError> {
          await Network
             .shared

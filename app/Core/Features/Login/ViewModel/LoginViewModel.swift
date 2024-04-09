@@ -33,7 +33,7 @@ class LoginViewModel {
     }
     
     func didTapToLoginIn() async {
-        guard !email.isEmpty && !password.isEmpty else {return}
+        guard validateForm() else {return}
         
         isLoadingLogin = true
         let result = await accountSessionRepo
@@ -64,6 +64,25 @@ class LoginViewModel {
     enum Destination: Equatable {
         case signUp
         case loginWithoutPassword
+    }
+    
+    private func validateForm() -> Bool{
+        if email.isEmpty {
+            errorMessage = "Email obrigatório"
+            return false
+        }
+        
+        if !email.isEmail() {
+            errorMessage = "Email inválido"
+            return false
+        }
+        
+        if !password.isPassword() {
+            errorMessage = "Sua senha deve ter pelo menos 6 digitos"
+            return false
+        }
+        
+        return true
     }
 }
 

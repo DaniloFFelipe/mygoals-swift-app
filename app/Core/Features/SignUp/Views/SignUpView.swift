@@ -15,26 +15,37 @@ struct SignUpView: View {
             .hAlign(alignment: .leading)
             .padding(.bottom, .Spacing.xxl)
             
-            AvatarPicker()
-                .padding(.bottom, .Spacing.xxl)
+//            AvatarPicker()
+//                .padding(.bottom, .Spacing.xxl)
             
-            Input(text: .constant(""), placeholder: "Nome") {
+            Input(text: $viewModel.name, placeholder: "Nome") {
                 Image(systemName: "person")
             }
             .padding(.bottom, .Spacing.md)
+            .autocorrectionDisabled()
             
-            Input(text: .constant(""), placeholder: "E-mail") {
+            Input(text: $viewModel.email, placeholder: "E-mail") {
                 Image(systemName: "at")
             }
             .padding(.bottom, .Spacing.md)
+            .autocorrectionDisabled()
+            .keyboardType(.emailAddress)
+            .textInputAutocapitalization(.never)
             
-            SecureInput(text: .constant(""), placeholder: "Password") {
+            SecureInput(text: $viewModel.password, placeholder: "Password") {
                 Image(systemName: "lock")
             }
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
             
             Spacer()
             
             AppButton(config: .regular, label: "Cadastrar-se") {
+                Task {
+                    await viewModel.didTapToRegister {
+                        dissmiss()
+                    }
+                }
             }
             .padding(.bottom, .Spacing.xl)
             
@@ -46,6 +57,16 @@ struct SignUpView: View {
         .onChange(of: viewModel.avatarItem) { oldValue, newValue in
             viewModel.onAvatarSelected()
         }
+        .alert(
+            "Ops!!",
+            isPresented: .init(get: { viewModel.error != nil }, set: { if !$0 { viewModel.error = nil  } }),
+            presenting: viewModel.error) { error in
+                Button("Ok", role: .cancel) {
+                    
+                }
+            } message: { details in
+                Text(details)
+            }
     }
     
     @ViewBuilder
@@ -72,7 +93,3 @@ struct SignUpView: View {
     }
 }
 
-#Preview {
-    SignUpView(viewModel: SignUpViewModel())
-        .preferredColorScheme(.dark)
-}

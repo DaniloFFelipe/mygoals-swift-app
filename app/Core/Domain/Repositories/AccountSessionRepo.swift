@@ -2,6 +2,7 @@ import Foundation
 import Combine
 
 struct AccountSessionRepo {
+    var register: (Register) async -> Result<EmptyCodable, ApplicationError>
     var loginWithPassword: (LoginWithPassword) async -> Result<AccountSession, ApplicationError>
     var loginWithCode: (LoginWithCode) async -> Result<AccountSession, ApplicationError>
     var sendCode: (SendCode) async -> Result<AuthCodeSession, ApplicationError>
@@ -12,6 +13,12 @@ struct AccountSessionRepo {
 
 extension AccountSessionRepo {
     struct LoginWithPassword: Codable {
+        var email: String
+        var password: String
+    }
+    
+    struct Register: Codable {
+        var fullName: String
         var email: String
         var password: String
     }

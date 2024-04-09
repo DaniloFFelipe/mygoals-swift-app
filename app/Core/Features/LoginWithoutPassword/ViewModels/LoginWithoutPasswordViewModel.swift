@@ -21,7 +21,10 @@ class LoginWithoutPasswordViewModel {
     }
     
     func didTapToSendCode() async {
-        guard !email.isEmpty else {return}
+        guard !email.isEmail() else {
+            errorMessage = "Email inválido"
+            return
+        }
         
         let result = await accountSessionRepo.sendCode(.init(email: email))
         switch result {

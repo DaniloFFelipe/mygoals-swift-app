@@ -46,5 +46,9 @@ extension Endpoint {
     static func createGoal(_ data: GoalsRepo.CreateGoal) -> Endpoint<GoalsRepo.CreateGoal, EmptyCodable> {
         .init(path: "/goals", body: data, method: .post, response: EmptyCodable.self)
     }
+    
+    static func register(_ data: AccountSessionRepo.Register) -> Endpoint<AccountSessionRepo.Register, EmptyCodable> {
+        .init(path: "/accounts/register", body: data, method: .post, response: EmptyCodable.self)
+    }
 }
 

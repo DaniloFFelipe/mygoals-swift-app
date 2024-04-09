@@ -46,6 +46,7 @@ class Network {
             )
             .response { data in
                 if let error = data.error {
+                    print("RESPONSE ERR: \(error.localizedDescription)")
                     if let code = error.responseCode {
                         return cont.resume(returning: .failure(.fromStatusCode(code)))
                     }
@@ -54,7 +55,9 @@ class Network {
                 }
                 
                 if let resp = data.response, resp.statusCode >= 400 {
-                    if let data = data.data, let dataErrorString = String(data: data, encoding: .utf8) {
+                    if let data = data.data, 
+                        let dataErrorString = String(data: data, encoding: .utf8)
+                    {
                         print("RESPONSE ERR: \(dataErrorString)")
                     }
                     
@@ -64,6 +67,7 @@ class Network {
                 guard let respData = data.data else {
                     return cont.resume(returning: .failure(.decodableError))
                 }
+                
                 
                 do {
                     let decoder = JSONDecoder()
